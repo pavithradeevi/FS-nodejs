@@ -1,11 +1,4 @@
-import express from 'express';
-
-import { createUser,getUsers } from '../controllers/users';
-
-
-
-
-const router = express.Router();
+import { v4 as uuidv4 } from 'uuid';
 
 let users=[
     // {
@@ -20,25 +13,46 @@ let users=[
     // }
 ]
 
-router.get('/',getUsers);
+
+
+export const getUsers =(req,res)=>{
+    res.send(users);
+    // console.log(users)
+    // res.send("hello users")
+}
 
 
 
 
+export const createUser = (req,res) =>{
+    
+    // console.log(req.body);
+    const user=req.body;
+    // const userId = uuidv4(); 
+    // const userWithId = { ...user, id:uuidv4}
+    users.push({ ...user, id:uuidv4() });
+    res.send(`User with the username ${user.name1} added to the database!`)
+}
 
-router.post('/',createUser);
+export const getUser =(req,res)=>{
+    // res.send('The GET ID Route');
+    // console.log(req.params);
+    const {id}=req.params;
 
-router.get('/:id',);
+    const foundUser = users.find((user)=>user.id === id);
+    res.send(foundUser)
+    // res.send(req.params);
+}
 
-router.delete('/:id',(req,res)=>{
+export const deleteUser = (req,res)=>{
     const {id}=req.params;
 
     users=users.filter((user)=>user.id != id);
 
     res.send(`user with the id ${id} deleted from the databse`)
-});
+}
 
-router.patch('/:id',(req,res)=>{
+export const updateUser = (req,res)=>{
     const {id}=req.params;
     const {name1,name2,age}=req.body;
 
@@ -58,8 +72,4 @@ router.patch('/:id',(req,res)=>{
     //     user.age=age;
     // }
 
-})
-
-
-
-export default router;
+}
